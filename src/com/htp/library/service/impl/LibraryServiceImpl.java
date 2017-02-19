@@ -2,7 +2,7 @@ package com.htp.library.service.impl;
 
 import java.util.List;
 
-import com.htp.library.dao.BookDao;
+import com.htp.library.dao.EntityDao;
 import com.htp.library.dao.LibraryDao;
 import com.htp.library.dao.LibraryDaoException;
 import com.htp.library.dao.dto.BookEmployeeDTO;
@@ -15,7 +15,7 @@ import com.htp.library.service.LibraryServiceException;
 public class LibraryServiceImpl implements LibraryService {
 
 	private LibraryDao libDao = new LibraryDaoImpl();
-	private BookDao bookDao = new BookDaoImpl();
+	private EntityDao entityDao = new BookDaoImpl();
 
 	@Override
 	public void getReportEmployeesWithMoreThanOneBook() throws LibraryServiceException {
@@ -58,7 +58,7 @@ public class LibraryServiceImpl implements LibraryService {
 	@Override
 	public void createBook(Book book) throws LibraryServiceException {
 		try {
-			bookDao.createBook(book);
+			entityDao.create(book);
 			System.out.println("New book was created!");
 		} catch (LibraryDaoException e) {
 			throw new LibraryServiceException("Error in service: " + e.getMessage(), e);
@@ -68,7 +68,7 @@ public class LibraryServiceImpl implements LibraryService {
 	@Override
 	public void printBookById(int id) throws LibraryServiceException {
 		try {
-			Book book = bookDao.getBookById(id);
+			Book book = (Book) entityDao.getById(id);
 			System.out.println(book);
 		} catch (LibraryDaoException e) {
 			throw new LibraryServiceException("Error in service: " + e.getMessage(), e);
@@ -78,7 +78,7 @@ public class LibraryServiceImpl implements LibraryService {
 	@Override
 	public void updateBook(Book book) throws LibraryServiceException {
 		try {
-			bookDao.updateBook(book);
+			entityDao.update(book);
 			System.out.println("Book with id=" + book.getId() + " was updated!");
 		} catch (LibraryDaoException e) {
 			throw new LibraryServiceException("Error in service: " + e.getMessage(), e);
@@ -88,8 +88,17 @@ public class LibraryServiceImpl implements LibraryService {
 	@Override
 	public void deleteBookById(int id) throws LibraryServiceException {
 		try {
-			bookDao.deleteBookById(id);
+			entityDao.deleteById(id);
 			System.out.println("Book with id=" + id + " was deleted!");
+		} catch (LibraryDaoException e) {
+			throw new LibraryServiceException("Error in service: " + e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public void fillBookEmployeeTable() throws LibraryServiceException {
+		try {
+			libDao.fillBookEmployeeTable();
 		} catch (LibraryDaoException e) {
 			throw new LibraryServiceException("Error in service: " + e.getMessage(), e);
 		}

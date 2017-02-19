@@ -17,4 +17,6 @@ public interface LibraryService {
 	void updateBook(Book book) throws LibraryServiceException;
 
 	void deleteBookById(int id) throws LibraryServiceException;
+
+	void fillBookEmployeeTable() throws LibraryServiceException;
 }

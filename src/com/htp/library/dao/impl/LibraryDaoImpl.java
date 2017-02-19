@@ -7,7 +7,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.htp.library.dao.LibraryDao;
 import com.htp.library.dao.LibraryDaoException;
@@ -22,6 +24,9 @@ public class LibraryDaoImpl implements LibraryDao {
 	private static final String QUERY_EMPLOYEES_MORE_THAN_ONE_BOOK = "SELECT employee.name, count(*) as c FROM mm_employee_book join employee on employee.id=mm_employee_book.employee_id group by mm_employee_book.employee_id having c>1 order by c";
 	private static final String QUERY_EMPLOYEES_LESS_THAN_TWO_BOOKS = "SELECT employee.name, employee.date_of_birth, count(*) as c FROM mm_employee_book join employee on employee.id=mm_employee_book.employee_id group by mm_employee_book.employee_id having c<=2 order by employee.date_of_birth, c";
 	private static final String QUERY_RENAME_BOOK = "UPDATE book SET brief=? WHERE brief=?";
+	private static final String QUERY_BOOK_ID_LIST = "SELECT id FROM book";
+	private static final String QUERY_EMPLOYEE_ID_LIST = "SELECT id FROM employee";
+	private static final String QUERY_INSERT_BOOK_EMPLOYEE = "INSERT INTO mm_employee_book (`book_id`,`employee_id`) VALUES(?, ?)";
 
 	@Override
 	public List<BookEmployeeDTO> getListEmployeesWithMoreThanOneBook() throws LibraryDaoException {
@@ -83,5 +88,52 @@ public class LibraryDaoImpl implements LibraryDao {
 			System.out.println("Error with DB connection!");
 		}
 		return dbConnection;
+	}
+
+	@Override
+	public void fillBookEmployeeTable() throws LibraryDaoException {
+		List<Integer> idBookList = fetchEntityIdList(QUERY_BOOK_ID_LIST);
+		List<Integer> idEmployeeList = fetchEntityIdList(QUERY_EMPLOYEE_ID_LIST);
+		idEmployeeList.remove(0);
+		Set<Integer> bookIdSet = null;
+		for (Integer employeeId : idEmployeeList) {
+			bookIdSet = new HashSet<>();
+			for (int i = 0; i < 10; i++) {
+				bookIdSet.add(getRandomBookId(idBookList));
+			}
+			for (Integer bookId : bookIdSet) {
+				insertBookEmployee(employeeId, bookId);
+			}
+		}
+	}
+
+	private static int getRandomBookId(List<Integer> idBookList) {
+		return (int) (1 + Math.random() * idBookList.size());
+	}
+
+	private static List<Integer> fetchEntityIdList(String query) throws LibraryDaoException {
+		List<Integer> idList = new ArrayList<>();
+		try (Connection dbConnection = getDBConnection();
+				PreparedStatement statement = dbConnection.prepareStatement(query);
+				ResultSet rs = statement.executeQuery()) {
+			while (rs.next()) {
+				idList.add(rs.getInt(1));
+			}
+		} catch (SQLException e) {
+			throw new LibraryDaoException("Exception with DB!", e);
+		}
+		return idList;
+	}
+
+	private static void insertBookEmployee(int employeeId, int bookId) throws LibraryDaoException {
+		try (Connection dbConnection = LibraryDaoImpl.getDBConnection();
+				PreparedStatement statement = dbConnection.prepareStatement(QUERY_INSERT_BOOK_EMPLOYEE)) {
+			statement.setInt(1, bookId);
+			statement.setInt(2, employeeId);
+			statement.executeUpdate();
+		} catch (SQLException e) {
+			throw new LibraryDaoException("Exception with DB!", e);
+		}
+
 	}
 }

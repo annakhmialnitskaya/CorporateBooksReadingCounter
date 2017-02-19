@@ -1,26 +1,16 @@
 package com.htp.library.domain;
 
-public class Book {
+public class Book extends Entity {
 
-	private int id;
 	private String author;
 	private String brief;
 	private int datePublishing;
 
 	public Book(int id, String author, String brief, int datePublishing) {
-		super();
-		this.id = id;
+		super(id);
 		this.author = author;
 		this.brief = brief;
 		this.datePublishing = datePublishing;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public String getAuthor() {
@@ -54,7 +44,7 @@ public class Book {
 		result = prime * result + ((author == null) ? 0 : author.hashCode());
 		result = prime * result + ((brief == null) ? 0 : brief.hashCode());
 		result = prime * result + datePublishing;
-		result = prime * result + id;
+		result = prime * result + getId();
 		return result;
 	}
 
@@ -79,14 +69,14 @@ public class Book {
 			return false;
 		if (datePublishing != other.datePublishing)
 			return false;
-		if (id != other.id)
+		if (getId() != other.getId())
 			return false;
 		return true;
 	}
 
 	@Override
 	public String toString() {
-		return "Book [id=" + id + ", author=" + author + ", brief=" + brief + ", datePublishing=" + datePublishing
+		return "Book [id=" + getId() + ", author=" + author + ", brief=" + brief + ", datePublishing=" + datePublishing
 				+ "]";
 	}
 

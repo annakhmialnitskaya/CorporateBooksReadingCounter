@@ -11,4 +11,6 @@ public interface LibraryDao {
 	List<BookEmployeeDTO> getListEmployeesWithLessThanOrEqualTwoBook() throws LibraryDaoException;
 
 	void renameBook(String oldBrief, String newBrief) throws LibraryDaoException;
+
+	void fillBookEmployeeTable() throws LibraryDaoException;
 }

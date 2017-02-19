@@ -9,16 +9,10 @@ public class Main {
 	public static void main(String[] args) {
 		LibraryService service = new LibraryServiceImpl();
 		try {
+			service.fillBookEmployeeTable();
 			service.getReportEmployeesWithMoreThanOneBook();
 			service.getReportEmployeesWithLessThanOrEqualTwoBook();
-			service.renameBook("War", "Peace!");
-
-			/*
-			 * Book book= new Book(56, "Grisha", "vodka i moloko", 2017);
-			 * service.createBook(book); service.printBookById(56);
-			 * book.setAuthor("Grisha123"); service.updateBook(book);
-			 * service.printBookById(56); service.deleteBookById(56);
-			 */
+			service.renameBook("Война и мир", "Война и мир.Роман");
 		} catch (LibraryServiceException e) {
 			System.out.println(e.getMessage());
 		}
