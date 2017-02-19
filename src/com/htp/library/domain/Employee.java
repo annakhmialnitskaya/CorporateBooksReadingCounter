@@ -4,15 +4,25 @@ import java.util.Date;
 
 public class Employee {
 
+	private int id;
 	private String name;
 	private String email;
 	private Date dateBirth;
 
-	public Employee(String name, String email, Date dateBirth) {
+	public Employee(int id, String name, String email, Date dateBirth) {
 		super();
+		this.id = id;
 		this.name = name;
 		this.email = email;
 		this.dateBirth = dateBirth;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public String getName() {
@@ -45,6 +55,7 @@ public class Employee {
 		int result = 1;
 		result = prime * result + ((dateBirth == null) ? 0 : dateBirth.hashCode());
 		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		result = prime * result + id;
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
 	}
@@ -68,6 +79,8 @@ public class Employee {
 				return false;
 		} else if (!email.equals(other.email))
 			return false;
+		if (id != other.id)
+			return false;
 		if (name == null) {
 			if (other.name != null)
 				return false;
@@ -78,6 +91,6 @@ public class Employee {
 
 	@Override
 	public String toString() {
-		return "Employee [name=" + name + ", email=" + email + ", dateBirth=" + dateBirth + "]";
+		return "Employee [id=" + id + ", name=" + name + ", email=" + email + ", dateBirth=" + dateBirth + "]";
 	}
 }
